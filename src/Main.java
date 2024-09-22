@@ -1,66 +1,89 @@
-import java.util.Scanner;
-
-// Козырев Лаба 1
-
 public class Main {
-    public static void main(String[] args) {
-        // Задание 1
-        for (int i = 1; i <= 500; i++) {
-            if (i % 5 == 0 && i % 7 == 0) {
-                System.out.println("fizzbuzz");
-            } else if (i % 5 == 0) {
-                System.out.println("fizz");
-            } else if (i % 7 == 0) {
-                System.out.println("buzz");
-            } else {
-                System.out.println(i);
-            }
+
+    // 1. FizzBuzz
+    public static String fizzBuzz(int number) {
+        if (number % 35 == 0) {
+            return "fizzbuzz";
+        } else if (number % 5 == 0) {
+            return "fizz";
+        } else if (number % 7 == 0) {
+            return "buzz";
+        } else {
+            return String.valueOf(number);
         }
+    }
 
-        // Задание 2
-        String str = "make install";
-        String reversedStr = new StringBuilder(str).reverse().toString();
-        System.out.println(reversedStr);
+    // 2. Reverse string
+    public static String reverseString(String str) {
+        StringBuilder reversed = new StringBuilder();
+        for (int i = str.length() - 1; i >= 0; i--) {
+            reversed.append(str.charAt(i));
+        }
+        return reversed.toString();
+    }
 
-        // Задание 3
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Введите коэффициент a: ");
-        double a = scanner.nextDouble();
-        System.out.print("Введите коэффициент b: ");
-        double b = scanner.nextDouble();
-        System.out.print("Введите коэффициент c: ");
-        double c = scanner.nextDouble();
-
+    // 3. Quadratic equation solver
+    public static String solveQuadraticEquation(double a, double b, double c) {
         double discriminant = b * b - 4 * a * c;
-        if (discriminant >= 0) {
+        if (discriminant < 0) {
+            return "нет вещественных корней";
+        } else if (discriminant == 0) {
+            double root = -b / (2 * a);
+            return "Корень: " + root;
+        } else {
             double root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
             double root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-            System.out.println("Корни уравнения: " + root1 + ", " + root2);
-        } else {
-            System.out.println("Нет вещественных корней");
+            return "Корни: " + root1 + ", " + root2;
         }
+    }
 
-        // Задание 4
+    // 4. Sum of the series
+    public static double sumSeries() {
         double sum = 0;
-        double term = 1;
         int n = 2;
-        while (term >= Math.pow(10, -6)) {
+        double term;
+        do {
+            term = 1.0 / (n * n + n - 2);
             sum += term;
-            term = 1 / (Math.pow(n, 2) + n - 2);
             n++;
-        }
-        System.out.println("Сумма ряда: " + sum);
+        } while (term >= 1e-6);
+        return sum;
+    }
 
-        // Задание 5
-        System.out.print("Введите строку: ");
-        scanner.nextLine(); // очистка буфера ввода
-        String inputString = scanner.nextLine();
-        String cleanString = inputString.replaceAll("[^a-zA-Zа-яА-Я]", "").toLowerCase();
-        String reversedString = new StringBuilder(cleanString).reverse().toString();
-        if (cleanString.equals(reversedString)) {
-            System.out.println("Строка является палиндромом");
-        } else {
-            System.out.println("Строка не является палиндромом");
+    // 5. Palindrome checker
+    public static boolean isPalindrome(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
         }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Пример вызовов функций
+
+        // 1. FizzBuzz для чисел от 1 до 500
+        for (int i = 1; i <= 500; i++) {
+            System.out.println(fizzBuzz(i));
+        }
+
+        // 2. Reverse string
+        System.out.println(reverseString("make install"));
+
+        // 3. Решение квадратного уравнения
+        System.out.println(solveQuadraticEquation(1, -3, 2)); // Дискриминант > 0
+        System.out.println(solveQuadraticEquation(1, 2, 1)); // Дискриминант == 0
+        System.out.println(solveQuadraticEquation(1, 1, 1)); // Дискриминант < 0
+
+        // 4. Сумма ряда
+        System.out.println(sumSeries());
+
+        // 5. Проверка на палиндром
+        System.out.println(isPalindrome("madam")); // true
+        System.out.println(isPalindrome("hello")); // false
     }
 }
