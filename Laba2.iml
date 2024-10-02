@@ -1,0 +1,364 @@
+import java.util.List;
+import java.util.ArrayList;
+
+public class Main {
+    public static void main(String[] args) {
+        // Button
+        class Button {
+            private int clicks;
+
+            public Button() {
+                clicks = 0;
+            }
+
+            public void click() {
+                clicks++;
+                System.out.println("Clicks: " + clicks);
+            }
+        }
+
+        Button button = new Button();
+        button.click();
+        button.click();
+
+        // Balance
+        class Balance {
+            private int leftWeight;
+            private int rightWeight;
+
+            public Balance() {
+                leftWeight = 0;
+                rightWeight = 0;
+            }
+
+            public void addLeft(int weight) {
+                leftWeight += weight;
+            }
+
+            public void addRight(int weight) {
+                rightWeight += weight;
+            }
+
+            public void result() {
+                if (leftWeight == rightWeight) {
+                    System.out.println("=");
+                } else if (leftWeight > rightWeight) {
+                    System.out.println("L");
+                } else {
+                    System.out.println("R");
+                }
+            }
+        }
+
+        Balance balance = new Balance();
+        balance.addLeft(10);
+        balance.addRight(5);
+        balance.result();
+
+        // Bell
+        class Bell {
+            private boolean isDing;
+
+            public Bell() {
+                isDing = true;
+            }
+
+            public void sound() {
+                if (isDing) {
+                    System.out.println("ding");
+                    isDing = false;
+                } else {
+                    System.out.println("dong");
+                    isDing = true;
+                }
+            }
+        }
+
+        Bell bell = new Bell();
+        bell.sound();
+        bell.sound();
+
+        // OddEvenSeparator
+        class OddEvenSeparator {
+            private List<Integer> numbers;
+            private List<Integer> evenNumbers;
+            private List<Integer> oddNumbers;
+
+            public OddEvenSeparator() {
+                numbers = new ArrayList<>();
+                evenNumbers = new ArrayList<>();
+                oddNumbers = new ArrayList<>();
+            }
+
+            public void addNumber(int number) {
+                numbers.add(number);
+                if (number % 2 == 0) {
+                    evenNumbers.add(number);
+                } else {
+                    oddNumbers.add(number);
+                }
+            }
+
+            public void even() {
+                System.out.println("Even numbers: " + evenNumbers);
+            }
+
+            public void odd() {
+                System.out.println("Odd numbers: " + oddNumbers);
+            }
+        }
+
+        OddEvenSeparator separator = new OddEvenSeparator();
+        separator.addNumber(1);
+        separator.addNumber(2);
+        separator.addNumber(3);
+        separator.addNumber(4);
+        separator.even();
+        separator.odd();
+
+        // Table
+        class Table {
+            private int[][] table;
+            private int rows;
+            private int cols;
+
+            public Table(int rows, int cols) {
+                this.rows = rows;
+                this.cols = cols;
+                table = new int[rows][cols];
+            }
+
+            public int getValue(int row, int col) {
+                return table[row][col];
+            }
+
+            public void setValue(int row, int col, int value) {
+                table[row][col] = value;
+            }
+
+            public int rows() {
+                return rows;
+            }
+
+            public int cols() {
+                return cols;
+            }
+
+            public String toString() {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        sb.append(table[i][j] + " ");
+                    }
+                    sb.append("\n");
+                }
+                return sb.toString();
+            }
+
+            public double average() {
+                int sum = 0;
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        sum += table[i][j];
+                    }
+                }
+                return (double) sum / (rows * cols);
+            }
+        }
+
+        Table table = new Table(2, 2);
+        table.setValue(0, 0, 1);
+        table.setValue(0, 1, 2);
+        table.setValue(1, 0, 3);
+        table.setValue(1, 1, 4);
+        System.out.println("Value at (0, 0): " + table.getValue(0, 0));
+        System.out.println("Value at (0, 1): " + table.getValue(0, 1));
+        System.out.println("Value at (1, 0): " + table.getValue(1, 0));
+        System.out.println("Value at (1, 1): " + table.getValue(1, 1));
+        System.out.println(table.toString());
+        System.out.println("Average: " + table.average());
+
+        // Geometry packages
+        interface Figure {
+            double area();
+            double perimeter();
+            String toString();
+        }
+
+        class Circle implements Figure {
+            private double radius;
+
+            public Circle(double radius) {
+                if (radius <= 0) {
+                    throw new IllegalArgumentException("Radius must be positive");
+                }
+                this.radius = radius;
+            }
+
+            public double area() {
+                return Math.PI * radius * radius;
+            }
+
+            public double perimeter() {
+                return 2 * Math.PI * radius;
+            }
+
+            public String toString() {
+                return "Circle with radius " + radius;
+            }
+        }
+
+        class Rectangle implements Figure {
+            private double width;
+            private double height;
+
+            public Rectangle(double width, double height) {
+                if (width <= 0 || height <= 0) {
+                    throw new IllegalArgumentException("Width and height must be positive");
+                }
+                this.width = width;
+                this.height = height;
+            }
+
+            public double area() {
+                return width * height;
+            }
+
+            public double perimeter() {
+                return 2 * (width + height);
+            }
+
+            public String toString() {
+                return "Rectangle with width " + width + " and height " + height;
+            }
+        }
+
+        class Cylinder implements Figure {
+            private double radius;
+            private double height;
+
+            public Cylinder(double radius, double height) {
+                if (radius <= 0 || height <= 0) {
+                    throw new IllegalArgumentException("Radius and height must be positive");
+                }
+                this.radius = radius;
+                this.height = height;
+            }
+
+            public double area() {
+                return 2 * Math.PI * radius * (radius + height);
+            }
+
+            public double perimeter() {
+                return 2 * Math.PI * radius;
+            }
+
+            public String toString() {
+                return "Cylinder with radius " + radius + " and height " + height;
+            }
+        }
+
+        Circle circle = new Circle(5);
+        System.out.println("Circle area: " + circle.area());
+        System.out.println("Circle perimeter: " + circle.perimeter());
+        System.out.println(circle.toString());
+
+        Rectangle rectangle = new Rectangle(3, 4);
+        System.out.println("Rectangle area: " + rectangle.area());
+        System.out.println("Rectangle perimeter: " + rectangle.perimeter());
+        System.out.println(rectangle.toString());
+
+        Cylinder cylinder = new Cylinder(2, 6);
+        System.out.println("Cylinder area: " + cylinder.area());
+        System.out.println("Cylinder perimeter: " + cylinder.perimeter());
+        System.out.println(cylinder.toString());
+
+public class Main {
+
+    // 1. FizzBuzz
+    public static String fizzBuzz(int number) {
+        if (number % 35 == 0) {
+            return "fizzbuzz";
+        } else if (number % 5 == 0) {
+            return "fizz";
+        } else if (number % 7 == 0) {
+            return "buzz";
+        } else {
+            return String.valueOf(number);
+        }
+    }
+
+    // 2. Reverse string
+    public static String reverseString(String str) {
+        StringBuilder reversed = new StringBuilder();
+        for (int i = str.length() - 1; i >= 0; i--) {
+            reversed.append(str.charAt(i));
+        }
+        return reversed.toString();
+    }
+
+    // 3. Quadratic equation solver
+    public static String solveQuadraticEquation(double a, double b, double c) {
+        double discriminant = b * b - 4 * a * c;
+        if (discriminant < 0) {
+            return "нет вещественных корней";
+        } else if (discriminant == 0) {
+            double root = -b / (2 * a);
+            return "Корень: " + root;
+        } else {
+            double root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+            double root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+            return "Корни: " + root1 + ", " + root2;
+        }
+    }
+
+    // 4. Sum of the series
+    public static double sumSeries() {
+        double sum = 0;
+        int n = 2;
+        double term;
+        do {
+            term = 1.0 / (n * n + n - 2);
+            sum += term;
+            n++;
+        } while (term >= 1e-6);
+        return sum;
+    }
+
+    // 5. Palindrome checker
+    public static boolean isPalindrome(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Пример вызовов функций
+
+        // 1. FizzBuzz для чисел от 1 до 500
+        for (int i = 1; i <= 500; i++) {
+            System.out.println(fizzBuzz(i));
+        }
+
+        // 2. Reverse string
+        System.out.println(reverseString("make install"));
+
+        // 3. Решение квадратного уравнения
+        System.out.println(solveQuadraticEquation(1, -3, 2)); // Дискриминант > 0
+        System.out.println(solveQuadraticEquation(1, 2, 1)); // Дискриминант == 0
+        System.out.println(solveQuadraticEquation(1, 1, 1)); // Дискриминант < 0
+
+        // 4. Сумма ряда
+        System.out.println(sumSeries());
+
+        // 5. Проверка на палиндром
+        System.out.println(isPalindrome("madam")); // true
+        System.out.println(isPalindrome("hello")); // false
+    }
+}
