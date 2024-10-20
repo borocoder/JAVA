@@ -1,0 +1,107 @@
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class Book {
+    private String name;
+    private String author;
+    private int publishingYear;
+    private String isbn;
+    private String publisher;
+}
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+public class Visitor {
+    private String name;
+    private String surname;
+    private String phone;
+    private boolean subscribed;
+    private List<Book> favoriteBooks;
+}
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.*;
+        import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String[] args) {
+        Gson gson = new Gson();
+        Type visitorListType = new TypeToken<List<Visitor>>() {}.getType();
+        List<Visitor> visitors;
+
+        // Чтение JSON файла
+        try (FileReader reader = new FileReader("books.json")) {
+            visitors = gson.fromJson(reader, visitorListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // Задание 1: Вывести список посетителей и их количество
+        System.out.println("Visitors:");
+        visitors.forEach(visitor -> System.out.println(visitor.getName() + " " + visitor.getSurname()));
+        System.out.println("Total visitors: " + visitors.size());
+
+        // Задание 2: Вывести список и количество книг, добавленных посетителями в избранное, без повторений
+        Set<Book> uniqueFavoriteBooks = visitors.stream()
+                .flatMap(visitor -> visitor.getFavoriteBooks().stream())
+                .collect(Collectors.toSet());
+        System.out.println("Unique favorite books: " + uniqueFavoriteBooks.size());
+        uniqueFavoriteBooks.forEach(book -> System.out.println(book.getName()));
+
+        // Задание 3: Отсортировать по году издания и вывести список книг
+        List<Book> sortedBooks = uniqueFavoriteBooks.stream()
+                .sorted(Comparator.comparingInt(Book::getPublishingYear))
+                .collect(Collectors.toList());
+        System.out.println("Sorted books by publishing year:");
+        sortedBooks.forEach(book -> System.out.println(book.getName() + " (" + book.getPublishingYear() + ")"));
+
+        // Задание 4: Проверить, есть ли у кого-то в избранном книга автора "Jane Austen"
+        boolean hasJaneAustenBook = visitors.stream()
+                .flatMap(visitor -> visitor.getFavoriteBooks().stream())
+                .anyMatch(book -> book.getAuthor().equals("Jane Austen"));
+        System.out.println("Is there any favorite book by Jane Austen? " + hasJaneAustenBook);
+
+        // Задание 5: Вывести максимальное число добавленных в избранное книг
+        int maxFavoriteBooks = visitors.stream()
+                .mapToInt(visitor -> visitor.getFavoriteBooks().size())
+                .max()
+                .orElse(0);
+        System.out.println("Maximum number of favorite books: " + maxFavoriteBooks);
+
+        // Задание 6: SMS-сообщения
+        double averageFavorites = visitors.stream()
+                .mapToInt(visitor -> visitor.getFavoriteBooks().size())
+                .average()
+                .orElse(0);
+
+        List<String> smsMessages = visitors.stream()
+                .filter(Visitor::isSubscribed)
+                .map(visitor -> {
+                    int favoriteCount = visitor.getFavoriteBooks().size();
+                    if (favoriteCount > averageFavorites) {
+                        return "You are a bookworm: " + visitor.getPhone();
+                    } else if (favoriteCount < averageFavorites) {
+                        return "Read more: " + visitor.getPhone();
+                    } else {
+                        return "Fine: " + visitor.getPhone();
+                    }
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("SMS messages:");
+        smsMessages.forEach(System.out::println);
+    }
+}
