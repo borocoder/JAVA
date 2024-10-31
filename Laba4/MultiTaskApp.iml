@@ -1,0 +1,165 @@
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class MultiTaskApp extends Application {
+    private TextField textField1 = new TextField();
+    private TextField textField2 = new TextField();
+    private Button toggleButton = new Button("→");
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Multi-Task Application");
+
+        // Задание 1
+        HBox wordSwitcher = createWordSwitcher();
+
+        // Задание 2
+        VBox widgetToggler = createWidgetToggler();
+
+        // Задание 3
+        VBox restaurantOrder = createRestaurantOrder();
+
+        // Задание 4
+        VBox calculator = createCalculator();
+
+        // Задание 5
+        VBox flagDesigner = createFlagDesigner();
+
+        // Основное расположение
+        VBox root = new VBox(10, wordSwitcher, widgetToggler, restaurantOrder, calculator, flagDesigner);
+        root.setPadding(new Insets(10));
+
+        Scene scene = new Scene(root, 400, 600);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private HBox createWordSwitcher() {
+        toggleButton.setOnAction(e -> swapText());
+
+        return new HBox(10, textField1, toggleButton, textField2);
+    }
+
+    private void swapText() {
+        if (toggleButton.getText().equals("→")) {
+            textField2.setText(textField1.getText());
+            textField1.clear();
+            toggleButton.setText("←");
+        } else {
+            textField1.setText(textField2.getText());
+            textField2.clear();
+            toggleButton.setText("→");
+        }
+    }
+
+    private VBox createWidgetToggler() {
+        CheckBox showLabel = new CheckBox("Показать Label");
+        CheckBox showButton = new CheckBox("Показать Кнопку");
+        Label label = new Label("Текстовая метка");
+        Button button = new Button("Нажми меня");
+
+        showLabel.setOnAction(e -> label.setVisible(showLabel.isSelected()));
+        showButton.setOnAction(e -> button.setVisible(showButton.isSelected()));
+
+        VBox box = new VBox(5, showLabel, label, showButton, button);
+        label.setVisible(false);
+        button.setVisible(false);
+
+        return box;
+    }
+
+    private VBox createRestaurantOrder() {
+        Label dish1Label = new Label("Пицца - 10$");
+        Spinner<Integer> dish1Count = new Spinner<>(0, 10, 0);
+        Label dish2Label = new Label("Паста - 8$");
+        Spinner<Integer> dish2Count = new Spinner<>(0, 10, 0);
+
+        Button calculateOrderButton = new Button("Посчитать");
+        Label orderSummary = new Label();
+
+        calculateOrderButton.setOnAction(e -> {
+            int pizzaTotal = dish1Count.getValue() * 10;
+            int pastaTotal = dish2Count.getValue() * 8;
+            int total = pizzaTotal + pastaTotal;
+            orderSummary.setText(String.format("Пицца: %d, Паста: %d, Сумма: %d$", pizzaTotal, pastaTotal, total));
+        });
+
+        return new VBox(5, dish1Label, dish1Count, dish2Label, dish2Count, calculateOrderButton, orderSummary);
+    }
+
+    private VBox createCalculator() {
+        TextField calcInput1 = new TextField();
+        TextField calcInput2 = new TextField();
+        Label resultLabel = new Label();
+        ComboBox<String> operation = new ComboBox<>();
+
+        operation.getItems().addAll("+", "-", "*", "/");
+        operation.getSelectionModel().selectFirst();
+
+        Button calcButton = new Button("Посчитать");
+        calcButton.setOnAction(e -> {
+            try {
+                double num1 = Double.parseDouble(calcInput1.getText());
+                double num2 = Double.parseDouble(calcInput2.getText());
+                double result = switch (operation.getValue()) {
+                    case "+" -> num1 + num2;
+                    case "-" -> num1 - num2;
+                    case "*" -> num1 * num2;
+                    case "/" -> (num2 == 0) ? Double.NaN : num1 / num2;
+                    default -> 0;
+                };
+                resultLabel.setText("Результат: " + result);
+            } catch (NumberFormatException ex) {
+                resultLabel.setText("Введите числа!");
+            }
+        });
+
+        return new VBox(5, calcInput1, operation, calcInput2, calcButton, resultLabel);
+    }
+
+    private VBox createFlagDesigner() {
+        RadioButton red = new RadioButton("Красный");
+        RadioButton green = new RadioButton("Зелёный");
+        RadioButton blue = new RadioButton("Синий");
+        RadioButton white = new RadioButton("Белый");
+        RadioButton yellow = new RadioButton("Жёлтый");
+
+        ToggleGroup color1 = new ToggleGroup();
+        ToggleGroup color2 = new ToggleGroup();
+        ToggleGroup color3 = new ToggleGroup();
+
+        red.setToggleGroup(color1);
+        green.setToggleGroup(color1);
+        blue.setToggleGroup(color1);
+        white.setToggleGroup(color2);
+        yellow.setToggleGroup(color2);
+
+        Button drawFlagButton = new Button("Нарисовать");
+        Label flagResult = new Label();
+
+        drawFlagButton.setOnAction(e -> {
+            RadioButton selectedColor1 = (RadioButton) color1.getSelectedToggle();
+            RadioButton selectedColor2 = (RadioButton) color2.getSelectedToggle();
+            RadioButton selectedColor3 = (RadioButton) color3.getSelectedToggle();
+
+            String flagColors = String.format("Флаг: %s, %s, %s",
+                    selectedColor1 == null ? "Не выбран" : selectedColor1.getText(),
+                    selectedColor2 == null ? "Не выбран" : selectedColor2.getText(),
+                    selectedColor3 == null ? "Не выбран" : selectedColor3.getText());
+
+            flagResult.setText(flagColors);
+        });
+
+        HBox flagOptions = new HBox(10, red, green, blue, white, yellow);
+        return new VBox(5, flagOptions, drawFlagButton, flagResult);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
